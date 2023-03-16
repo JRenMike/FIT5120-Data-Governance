@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Shopping Frequency Form</title>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+	<form>
+		<label for="name">Name:</label>
+		<input type="text" id="name" name="name" required>
+		<br><br><br>
+        
+		<label for="shopping-frequency">How many times did you shop today?</label>
+		<input type="number" id="shopping-frequency" name="shopping-frequency" min="0" required value =  0>
+		<br><br><br>	
+        
+
+        
+        <label for="takeaway-frequency">how many times did you order take away 						today</label>
+        <input type="number" id="takeaway-frequency" name="takeaway-frequency" min="0" 					required value = 0>
+        <br><br><br>
+        
+        <label for="shopping-date">Date:</label>
+		<input type="date" id="shopping-date" name="shopping-date" required>
+		<br><br><br>
+        
+		<button type="button" onclick="recordData()">Record Data</button>
+		<button type="button" onclick="plotData()">Plot Data</button>
+        <button type="button" onclick="plottakeaway()">Plot takeaway </button>
+
+	</form>
+
+	<table id="data-table" border='1'>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Date</th>
+				<th>Shopping Frequency</th>
+                <th>takeaway Frequency</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+
+	<div id="plot"></div>
+    
+    <div id="plot2"></div>
+
+	<script>
+		function recordData() {
+			const name = document.getElementById('name').value;
+			const frequency = document.getElementById('shopping-frequency').value;
+			const date = document.getElementById('shopping-date').value;
+            const takeaway_frequency = document.getElementById('takeaway-frequency').value;
+
+			const table = document.getElementById('data-table').getElementsByTagName('tbody')[0];
+			const newRow = table.insertRow(table.rows.length);
+			const cell1 = newRow.insertCell(0);
+			const cell2 = newRow.insertCell(1);
+			const cell3 = newRow.insertCell(2);
+            const cell4 = newRow.insertCell(3);
+			cell1.innerHTML = name;
+			cell2.innerHTML = date;
+			cell3.innerHTML = frequency;
+            cell4.innerHTML = takeaway_frequency;
+		}
+
+		function plotData() {
+			const data = [];
+			const tableRows = document.getElementById('data-table').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+			for (let i = 0; i < tableRows.length; i++) {
+				const row = tableRows[i];
+				const name = row.cells[0].innerText;
+				const date = row.cells[1].innerText;
+				const frequency = row.cells[2].innerText;
+				data.push({
+					x: [date],
+					y: [frequency],
+					type: 'bar',
+					name: name
+				});
+			}
+
+			const layout = {
+			  title: 'Shopping Frequency',
+			  xaxis: {
+			    tickangle: -45
+			  },
+			  yaxis: {
+			  	title: 'Frequency'
+			  }
+			};
+            Plotly.newPlot('plot', data, layout);
+            
+		}
+        
+		function plottakeaway() {
+			const data = [];
+			const tableRows = document.getElementById('data-table').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+			for (let i = 0; i < tableRows.length; i++) {
+				const row = tableRows[i];
+				const name = row.cells[0].innerText;
+				const date = row.cells[1].innerText;
+				const frequency = row.cells[3].innerText;
+				data.push({
+					x: [date],
+					y: [frequency],
+					type: 'bar',
+					name: name
+				});
+			}
+
+			const layout = {
+			  title: 'takeaway  Frequency',
+			  xaxis: {
+			    tickangle: -45
+			  },
+			  yaxis: {
+			  	title: 'Frequency'
+			  }
+			};
+            Plotly.newPlot('plot2', data, layout);
+            
+		}
+	</script>
+</body>
+</html>
